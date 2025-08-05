@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @Builder
 public class Tarea {
-    private String id;
+    private Long id;
     private String title;
     private String description;
     private Date dueDate;

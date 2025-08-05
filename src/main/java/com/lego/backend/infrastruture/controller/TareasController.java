@@ -4,6 +4,7 @@ package com.lego.backend.infrastruture.controller;
 import com.lego.backend.domain.models.Tarea;
 import com.lego.backend.domain.usecases.TareasUseCase;
 import com.lego.backend.infrastruture.dto.TareaDto;
+import com.lego.backend.infrastruture.dto.UpdateTareaDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +47,7 @@ public class TareasController {
     }
 
     // ver lista de tareas
-    @GetMapping("/listar")
+    @GetMapping("/listar/{id}")
     @Operation(summary = "Listar Tareas",
             description = "Servicio para listar todas las tareas",
             tags = {"Tareas"})
@@ -116,7 +116,7 @@ public class TareasController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)))}
     )
-    public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id, @Valid @RequestBody TareaDto tareaDto) {
+    public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id, @Valid @RequestBody UpdateTareaDto tareaDto) {
         Tarea tareaActualizada = tareasUseCase.actualizarTarea(id, tareaDto.toDomain());
         if (tareaActualizada == null) {
             return ResponseEntity.notFound().build();

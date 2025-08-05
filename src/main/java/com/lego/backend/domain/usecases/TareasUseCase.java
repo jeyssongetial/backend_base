@@ -43,7 +43,7 @@ public Tarea actualizarTarea(Long id, Tarea domain) {
         Tarea tareaExistente = tareasRepository.buscarPorId(id);
         if (tareaExistente != null) {
             tareasRepository.eliminar(id); // Lógica para eliminar la tarea
-            return true; // Retornamos true si la tarea fue eliminada exitosamente
+            return true; // Retornam true si la tarea fue eliminada exitosamente
         }
         return false; // Retornamos false si no se encontró la tarea
     }
