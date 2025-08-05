@@ -1,36 +1,53 @@
 package com.lego.backend.domain.usecases;
 
+import com.lego.backend.domain.ex.BusinessException;
 import com.lego.backend.domain.models.Tarea;
+import com.lego.backend.domain.repository.TareasRepository;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class TareasUseCase {
+    private final TareasRepository tareasRepository;
+
     public Tarea crearTarea(Tarea tarea) {
-        // Aquí se implementaría la lógica para crear una tarea
-        // Por ejemplo, guardar la tarea en una base de datos
-        // Retornamos la tarea creada
-        return tarea;
+
+        return tareasRepository.guardar(tarea);
     }
 
-    public List<Tarea> listarTareas() {
-        return null;
+    public List<Tarea> listarTareas(Long userId) {
+        return tareasRepository.listarTareas(userId);
     }
 
     public Tarea obtenerTareaPorId(Long id) {
-        // Aquí se implementaría la lógica para obtener una tarea por su ID
-        // Por ejemplo, buscar la tarea en una base de datos
-        // Retornamos la tarea encontrada
-        return null;
-    }
+        // Lógica para obtener una tarea por su ID
+        return tareasRepository.buscarPorId(id);
+    };
 
-    public Tarea actualizarTarea(Long id, Tarea domain) {
-        // Aquí se implementaría la lógica para actualizar una tarea
-        // Por ejemplo, buscar la tarea por ID y actualizar sus campos
-        // Retornamos la tarea actualizada
-        return domain;
+
+public Tarea actualizarTarea(Long id, Tarea domain) {
+    Tarea tareaExistente = tareasRepository.buscarPorId(id);
+    if (tareaExistente == null) {
+        throw BusinessException.Type.ERROR_TAREA_NO_ENCONTRADA.build();
     }
+    // Actualizamos los campos necesarios
+    tareaExistente.setTitle(domain.getTitle());
+    tareaExistente.setDescription(domain.getDescription());
+    tareaExistente.setDueDate(domain.getDueDate());
+    // Guardamos la tarea actualizada
+    return tareasRepository.guardar(tareaExistente);
+}
 
     public boolean eliminarTarea(Long id) {
-        return false;
+        Tarea tareaExistente = tareasRepository.buscarPorId(id);
+        if (tareaExistente != null) {
+            tareasRepository.eliminar(id); // Lógica para eliminar la tarea
+            return true; // Retornamos true si la tarea fue eliminada exitosamente
+        }
+        return false; // Retornamos false si no se encontró la tarea
     }
 }
+
+
+
